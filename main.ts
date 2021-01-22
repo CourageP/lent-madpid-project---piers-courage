@@ -20,6 +20,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         ..................
         `, Good_guy, 200, 0)
 })
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    projectile.destroy()
+    Evil_guy.destroy()
+    info.changeScoreBy(1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    Evil_guy.destroy(effects.confetti, 500)
+})
 let Evil_guy: Sprite = null
 let projectile: Sprite = null
 let Good_guy: Sprite = null
@@ -44,6 +53,7 @@ Good_guy = sprites.create(img`
     `, SpriteKind.Player)
 controller.moveSprite(Good_guy)
 Good_guy.setFlag(SpriteFlag.StayInScreen, true)
+info.setLife(5)
 game.onUpdateInterval(2000, function () {
     Evil_guy = sprites.create(img`
         ..............................
@@ -79,4 +89,5 @@ game.onUpdateInterval(2000, function () {
         `, SpriteKind.Enemy)
     Evil_guy.x = scene.screenWidth()
     Evil_guy.vx = -20
+    Evil_guy.y = randint(10, scene.screenHeight() - 10)
 })
